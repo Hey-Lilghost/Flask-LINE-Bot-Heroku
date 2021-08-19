@@ -1,3 +1,4 @@
+import pandas as pd
 import os
 from datetime import datetime
 
@@ -34,10 +35,19 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
-    if get_message == "小鬼真帥":
-        reply = TextSendMessage(text="你說得太對了!")
-        line_bot_api.reply_message(event.reply_token, reply)
-    else:
+    try:
+        x = int(get_message)
+        if x in range(1,42):
+            df = pd.read_csv("data.csv")
+            pick = df.at[x-1,'金額']
+            reply = TextSendMessage(text=pick)
+            line_bot_api.reply_message(event.reply_token, reply)
+    except:      
+        if get_message == "小鬼真帥":
+            reply = TextSendMessage(text="你說得太對了!")
+            line_bot_api.reply_message(event.reply_token, reply)
+    
+        else:
     # Send To Line
-        reply = TextSendMessage(text=f"{get_message}")
-        line_bot_api.reply_message(event.reply_token, reply)
+            reply = TextSendMessage(text=f"{get_message}")
+            line_bot_api.reply_message(event.reply_token, reply)
